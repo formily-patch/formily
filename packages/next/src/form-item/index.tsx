@@ -144,7 +144,7 @@ export const BaseItem: React.FC<React.PropsWithChildren<IFormItemProps>> = (
     feedbackStatus,
     extra,
     feedbackText,
-    fullness,
+    fullness = true,
     feedbackLayout,
     feedbackIcon,
     inset,
@@ -420,10 +420,6 @@ export const FormItem: ComposeFormItem = connect(
     }
   })
 )
-
-FormItem.defaultProps = {
-  fullness: true,
-}
 
 FormItem.BaseItem = BaseItem
 

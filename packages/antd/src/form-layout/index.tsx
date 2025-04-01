@@ -66,7 +66,14 @@ export const FormLayout: React.FC<React.PropsWithChildren<IFormLayoutProps>> & {
   useFormLayout: () => IFormLayoutContext
   useFormDeepLayout: () => IFormLayoutContext
   useFormShallowLayout: () => IFormLayoutContext
-} = ({ shallow, children, prefixCls, className, style, ...otherProps }) => {
+} = ({
+  shallow = true,
+  children,
+  prefixCls,
+  className,
+  style,
+  ...otherProps
+}) => {
   const { ref, props } = useResponsiveFormLayout(otherProps)
   const deepLayout = useFormDeepLayout()
   const formPrefixCls = usePrefixCls('form', { prefixCls })
@@ -107,10 +114,6 @@ export const FormLayout: React.FC<React.PropsWithChildren<IFormLayoutProps>> & {
       {renderChildren()}
     </div>
   )
-}
-
-FormLayout.defaultProps = {
-  shallow: true,
 }
 
 FormLayout.useFormDeepLayout = useFormDeepLayout

@@ -142,11 +142,11 @@ const addPrimaryKey = (dataSource, rowKey, primaryKey) =>
 
 export const SelectTable: ComposedSelectTable = observer((props) => {
   const {
-    mode,
+    mode = 'multiple',
     dataSource: propsDataSource,
     optionAsValue,
-    valueType,
-    showSearch,
+    valueType = 'all',
+    showSearch = false,
     filterOption,
     filterSort,
     onSearch,
@@ -155,7 +155,7 @@ export const SelectTable: ComposedSelectTable = observer((props) => {
     value,
     onChange,
     rowSelection,
-    primaryKey: rowKey,
+    primaryKey: rowKey = 'key',
     ...otherTableProps
   } = props
   const prefixCls = usePrefixCls('formily-select-table', props)
@@ -408,12 +408,5 @@ const TableColumn: React.FC<
 > = () => <></>
 
 SelectTable.Column = TableColumn
-
-SelectTable.defaultProps = {
-  showSearch: false,
-  valueType: 'all',
-  primaryKey: 'key',
-  mode: 'multiple',
-}
 
 export default SelectTable

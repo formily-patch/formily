@@ -21,9 +21,9 @@ const spaceSize = {
 }
 
 export const Space: React.FC<React.PropsWithChildren<ISpaceProps>> = ({
-  direction,
+  direction = 'horizontal',
   size,
-  align,
+  align = 'start',
   ...props
 }) => {
   const layout = useFormLayout()
@@ -65,11 +65,6 @@ export const Space: React.FC<React.PropsWithChildren<ISpaceProps>> = ({
       ))}
     </Box>
   )
-}
-
-Space.defaultProps = {
-  direction: 'horizontal',
-  align: 'start',
 }
 
 export default Space

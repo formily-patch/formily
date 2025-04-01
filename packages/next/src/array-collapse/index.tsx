@@ -73,7 +73,7 @@ const insertExpandedKeys = (expandedKeys: number[], index: number) => {
 }
 
 export const ArrayCollapse: ComposedArrayCollapse = observer(
-  ({ defaultOpenPanelCount, ...props }) => {
+  ({ defaultOpenPanelCount = 5, ...props }) => {
     const field = useField<ArrayField>()
     const dataSource = Array.isArray(field.value) ? field.value : []
 
@@ -233,9 +233,6 @@ const CollapsePanel: React.FC<React.PropsWithChildren<PanelProps>> = ({
 
 CollapsePanel.displayName = 'CollapsePanel'
 
-ArrayCollapse.defaultProps = {
-  defaultOpenPanelCount: 5,
-}
 ArrayCollapse.displayName = 'ArrayCollapse'
 ArrayCollapse.CollapsePanel = CollapsePanel
 
