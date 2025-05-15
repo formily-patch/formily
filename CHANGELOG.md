@@ -1,5 +1,9 @@
 # Changelog
 
+## v2.3.6(2025-05-15)
+
+### No Change Log
+
 ## v2.3.5(2025-05-15)
 
 ### No Change Log
@@ -626,20 +630,6 @@
 
 ## v2.1.11(2022-07-19)
 
-### :bug: Bug Fixes
-
-1. [fix(react): fix useAttach not work with react18 strict mode (#3284)](https://github.com/alibaba/formily/commit/9df806b5) :point_right: ( [Janry](https://github.com/Janry) )
-
-1. [fix: doc (#3280)](https://github.com/alibaba/formily/commit/8569c0fe) :point_right: ( [Creabine](https://github.com/Creabine) )
-
-1. [fix(antd): use Select fieldNames (#3275)](https://github.com/alibaba/formily/commit/edf7a9f9) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
-
-### :blush: Other Changes
-
-1. [chore(deps): bump moment from 2.29.3 to 2.29.4 (#3267)](https://github.com/alibaba/formily/commit/88df0daa) :point_right: ( [dependabot[bot]](https://github.com/dependabot[bot]) )
-
-## v2.1.10(2022-07-11)
-
 ### :tada: Enhancements
 
 1. [feat(antd/next): improve copy action ui (#3263)](https://github.com/alibaba/formily/commit/fd7b5f53) :point_right: ( [Janry](https://github.com/Janry) )
@@ -972,6 +962,12 @@
 
 ### :bug: Bug Fixes
 
+1. [fix(react): fix useAttach not work with react18 strict mode (#3284)](https://github.com/alibaba/formily/commit/9df806b5) :point_right: ( [Janry](https://github.com/Janry) )
+
+1. [fix: doc (#3280)](https://github.com/alibaba/formily/commit/8569c0fe) :point_right: ( [Creabine](https://github.com/Creabine) )
+
+1. [fix(antd): use Select fieldNames (#3275)](https://github.com/alibaba/formily/commit/edf7a9f9) :point_right: ( [yiyunwan](https://github.com/yiyunwan) )
+
 1. [fix(antd/next): fix array components lose reactive (#3266)](https://github.com/alibaba/formily/commit/9107e86c) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [fix(antd/next): fix Cascader in form readPretty mode display error #3250 (#3253)](https://github.com/alibaba/formily/commit/d5719100) :point_right: ( [风](https://github.com/风) )
@@ -980,7 +976,7 @@
 
 1. [fix(antd/next): react 18 createRoot warning (#3226)](https://github.com/alibaba/formily/commit/cc1f5d48) :point_right: ( [csc-bo](https://github.com/csc-bo) )
 
-1. [fix(reactive-react): fix react18 strict mode dispose trigger timing (#3229)](https://github.com/alibaba/formily/commit/9182e1f8) :point_right: ( [Janry](https://github.com/Janry) )
+1. [fix(reactive-react): fix useLayoutEffect warning in server render (#3228)](https://github.com/alibaba/formily/commit/8c9ab06b) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [fix: vue3 slots.default do not always exist (#3192)](https://github.com/alibaba/formily/commit/91d64889) :point_right: ( [qq1037305420](https://github.com/qq1037305420) )
 
@@ -1013,8 +1009,6 @@
 1. [fix(next/antd): fix form-collapse pass defaultActiveKey (#3107)](https://github.com/alibaba/formily/commit/793cae98) :point_right: ( [Jehu](https://github.com/Jehu) )
 
 1. [fix(react): update react peerDependencies (#3096)](https://github.com/alibaba/formily/commit/6e939d82) :point_right: ( [蜘蛛侠](https://github.com/蜘蛛侠) )
-
-1. [fix(react): fix markup field is not work with strict-mode (#3088)](https://github.com/alibaba/formily/commit/431c3db8) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [fix: fix rollup.base.js externals antd name (#3084)](https://github.com/alibaba/formily/commit/a4029fbe) :point_right: ( [ickeep](https://github.com/ickeep) )
 
@@ -1184,8 +1178,6 @@
 
 1. [fix(designable): fix Uncaught SyntaxError (#1997) (#2089)](https://github.com/alibaba/formily/commit/b56b5b28) :point_right: ( [youshao](https://github.com/youshao) )
 
-1. [fix(reactive-react): fix observer 2nd generic type (#2071)](https://github.com/alibaba/formily/commit/4b18a6ba) :point_right: ( [Yanlin Jiang](https://github.com/Yanlin Jiang) )
-
 1. [fix(core): fix add effects memo leak in form umount (#2050)](https://github.com/alibaba/formily/commit/f753ba12) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [fix(element): remove Formily namepsace usecase](https://github.com/alibaba/formily/commit/0cc90672) :point_right: ( [janrywang](https://github.com/janrywang) )
@@ -1247,6 +1239,8 @@
 1. [fix(element): add rollup external to fix element package size (#1766)](https://github.com/alibaba/formily/commit/8104dbfb) :point_right: ( [Muyao](https://github.com/Muyao) )
 
 1. [fix(vue): fix vue typing (#1730)](https://github.com/alibaba/formily/commit/b51a2198) :point_right: ( [Muyao](https://github.com/Muyao) )
+
+1. [fix(react): fix x-content is not work with array type (#1719)](https://github.com/alibaba/formily/commit/2cd60d32) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [fix(reactive): fix Tracker memo leak in StrictMode (#1715)](https://github.com/alibaba/formily/commit/e9f23c39) :point_right: ( [Janry](https://github.com/Janry) )
 
@@ -1311,6 +1305,8 @@
 1. [fix(antd/next): fix the feedbackLayout type definition error of the form-layout (#1372)](https://github.com/alibaba/formily/commit/3c5f6f7c) :point_right: ( [liuwei](https://github.com/liuwei) )
 
 1. [fix json-schema SchemaReaction type error (#1367)](https://github.com/alibaba/formily/commit/adae3da5) :point_right: ( [liuwei](https://github.com/liuwei) )
+
+1. [fix(reactive-react): fix browser crash in strict-mode async linkages scence](https://github.com/alibaba/formily/commit/feb64875) :point_right: ( [janrywang](https://github.com/janrywang) )
 
 1. [fix(next): fix scss variables](https://github.com/alibaba/formily/commit/c99a380e) :point_right: ( [janrywang](https://github.com/janrywang) )
 
@@ -2014,6 +2010,8 @@
 
 ### :blush: Other Changes
 
+1. [chore(deps): bump moment from 2.29.3 to 2.29.4 (#3267)](https://github.com/alibaba/formily/commit/88df0daa) :point_right: ( [dependabot[bot]](https://github.com/dependabot[bot]) )
+
 1. [chore: remove getValueByValue](https://github.com/alibaba/formily/commit/2ca7aaf5) :point_right: ( [janrywang](https://github.com/janrywang) )
 
 1. [chore(deps): bump parse-url from 6.0.0 to 6.0.2 (#3255)](https://github.com/alibaba/formily/commit/679fbb74) :point_right: ( [dependabot[bot]](https://github.com/dependabot[bot]) )
@@ -2025,8 +2023,6 @@
 1. [chore(reactive): revert batch tracker (#3112)](https://github.com/alibaba/formily/commit/604d74ac) :point_right: ( [Janry](https://github.com/Janry) )
 
 1. [chore: add carbon ad tag](https://github.com/alibaba/formily/commit/679efc54) :point_right: ( [janrywang](https://github.com/janrywang) )
-
-1. [chore(deps): bump moment from 2.29.1 to 2.29.2 (#3033)](https://github.com/alibaba/formily/commit/c26e011c) :point_right: ( [dependabot[bot]](https://github.com/dependabot[bot]) )
 
 1. [chore(antd/next): replace useForm to useParentForm in Form component](https://github.com/alibaba/formily/commit/43a3d6b8) :point_right: ( [janrywang](https://github.com/janrywang) )
 
