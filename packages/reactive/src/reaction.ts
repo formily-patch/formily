@@ -12,6 +12,8 @@ import {
   UntrackCount,
   BatchScope,
   ObserverListeners,
+  PendingComputedReactions,
+  PendingScopeComputedReactions,
 } from './environment'
 
 const ITERATION_KEY = Symbol('iteration key')
@@ -52,7 +54,7 @@ const addReactionsMapToReaction = (
   return bindSet
 }
 
-const getReactionsFromTargetKey = (target: any, key: PropertyKey) => {
+export const getReactionsFromTargetKey = (target: any, key: PropertyKey) => {
   const reactionsMap = RawReactionsMap.get(target)
   const reactions = []
   if (reactionsMap) {
@@ -75,7 +77,15 @@ const runReactions = (target: any, key: PropertyKey) => {
   for (let i = 0, len = reactions.length; i < len; i++) {
     const reaction = reactions[i]
     if (reaction._isComputed) {
-      reaction._scheduler(reaction)
+      reaction._dirty = true
+      reaction._dirty_scheduler = true
+      if (isScopeBatching()) {
+        PendingScopeComputedReactions.add(reaction)
+      } else if (isBatching()) {
+        PendingComputedReactions.add(reaction)
+      } else {
+        reaction._scheduler(reaction)
+      }
     } else if (isScopeBatching()) {
       PendingScopeReactions.add(reaction)
     } else if (isBatching()) {
@@ -182,13 +192,18 @@ export const batchStart = () => {
 }
 
 export const batchEnd = () => {
-  BatchCount.value--
-  if (BatchCount.value === 0) {
+  if (BatchCount.value === 1) {
     const prevUntrackCount = UntrackCount.value
     UntrackCount.value = 0
+    executePendingComputedReactions()
+
+    BatchCount.value--
+
     executePendingReactions()
     executeBatchEndpoints()
     UntrackCount.value = prevUntrackCount
+  } else {
+    BatchCount.value--
   }
 }
 
@@ -198,8 +213,15 @@ export const batchScopeStart = () => {
 
 export const batchScopeEnd = () => {
   const prevUntrackCount = UntrackCount.value
-  BatchScope.value = false
   UntrackCount.value = 0
+
+  PendingScopeComputedReactions.batchDelete((reaction) => {
+    if (isFn(reaction._scheduler)) {
+      reaction._scheduler(reaction)
+    }
+  })
+
+  BatchScope.value = false
   PendingScopeReactions.batchDelete((reaction) => {
     if (isFn(reaction._scheduler)) {
       reaction._scheduler(reaction)
@@ -223,6 +245,14 @@ export const isBatching = () => BatchCount.value > 0
 export const isScopeBatching = () => BatchScope.value
 
 export const isUntracking = () => UntrackCount.value > 0
+
+export const executePendingComputedReactions = () => {
+  PendingComputedReactions.batchDelete((reaction) => {
+    if (isFn(reaction._scheduler)) {
+      reaction._scheduler(reaction)
+    }
+  })
+}
 
 export const executePendingReactions = () => {
   PendingReactions.batchDelete((reaction) => {

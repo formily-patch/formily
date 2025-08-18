@@ -15,6 +15,8 @@ export const BatchScope = { value: false }
 export const DependencyCollected = { value: false }
 export const PendingReactions = new ArraySet<Reaction>()
 export const PendingScopeReactions = new ArraySet<Reaction>()
+export const PendingComputedReactions = new ArraySet<Reaction>()
+export const PendingScopeComputedReactions = new ArraySet<Reaction>()
 export const BatchEndpoints = new ArraySet<() => void>()
 export const ObserverListeners = new ArraySet<ObservableListener>()
 export const MakeObModelSymbol = Symbol('MakeObModelSymbol')
