@@ -72,6 +72,7 @@ export type Reaction = ((...args: any[]) => any) & {
   _computesSet?: ArraySet<Reaction>
   _reactionsSet?: ArraySet<ReactionsArraySet<Reaction>>
   _reactionId?: number
+  _batchId?: number
   _scheduler?: (reaction: Reaction) => void
   _memos?: {
     queue: IMemoQueueItem[]

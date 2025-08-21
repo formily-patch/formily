@@ -56,14 +56,24 @@ export class ReactionsArraySet<T extends Reaction> {
   batchDelete(callback: (value: T) => void) {
     if (this.valueSet.size === 0) return
 
+    const list = []
+
     for (const item of this.valueSet) {
       const reactionId = this.reactionIdMap.get(item)
       if (reactionId === item._reactionId) {
-        callback(item)
+        list.push(item)
       }
     }
 
     this.clear()
+
+    for (let i = 0; i < list.length; i++) {
+      callback(list[i])
+    }
+
+    if (this.valueSet.size > 0) {
+      this.batchDelete(callback)
+    }
   }
 
   clear() {

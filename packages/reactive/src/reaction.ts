@@ -15,6 +15,7 @@ import {
   ObserverListeners,
   PendingComputedReactions,
   PendingScopeComputedReactions,
+  BatchIdRef,
 } from './environment'
 
 const ITERATION_KEY = Symbol('iteration key')
@@ -224,13 +225,7 @@ export const batchScopeEnd = () => {
   })
 
   BatchScope.value = false
-  PendingScopeReactions.batchDelete((reaction) => {
-    if (isFn(reaction._scheduler)) {
-      reaction._scheduler(reaction)
-    } else {
-      reaction()
-    }
-  })
+  executePendingScopeReactions()
   UntrackCount.value = prevUntrackCount
 }
 
@@ -257,11 +252,29 @@ export const executePendingComputedReactions = () => {
 }
 
 export const executePendingReactions = () => {
+  const batchId = BatchIdRef.current++
   PendingReactions.batchDelete((reaction) => {
-    if (isFn(reaction._scheduler)) {
-      reaction._scheduler(reaction)
-    } else {
-      reaction()
+    if (batchId > (reaction._batchId || 0)) {
+      reaction._batchId = batchId
+      if (isFn(reaction._scheduler)) {
+        reaction._scheduler(reaction)
+      } else {
+        reaction()
+      }
+    }
+  })
+}
+
+export const executePendingScopeReactions = () => {
+  const batchId = BatchIdRef.current++
+  PendingScopeReactions.batchDelete((reaction) => {
+    if (batchId > (reaction._batchId || 0)) {
+      reaction._batchId = batchId
+      if (isFn(reaction._scheduler)) {
+        reaction._scheduler(reaction)
+      } else {
+        reaction()
+      }
     }
   })
 }

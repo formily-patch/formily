@@ -12,6 +12,7 @@ export const RawReactionsMap = new WeakMap<object, ReactionsMap>()
 export const ReactionStack: Reaction[] = []
 export const BatchCount = { value: 0 }
 export const UntrackCount = { value: 0 }
+export const BatchIdRef = { current: 1 }
 export const BatchScope = { value: false }
 export const DependencyCollected = { value: false }
 export const PendingReactions = new ReactionsArraySet<Reaction>()
