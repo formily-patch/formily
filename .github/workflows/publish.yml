@@ -1,0 +1,91 @@
+# .github/workflows/publish-patch.yml
+name: Publish Patch Packages
+on:
+  push:
+    branches: [formily_next_patch]
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: 'Packages to publish (comma-separated)'
+        required: false
+        default: '@formily/core,@formily/react,@formily/path,@formily/reactive,@formily/validator,@formily/shared,@formily/reactive-react,@formily/json-schema'
+
+env:
+  PUBLISH_PACKAGES: ${{ github.event.inputs.packages || '@formily/core,@formily/react,@formily/path,@formily/reactive,@formily/validator,@formily/shared,@formily/reactive-react,@formily/json-schema' }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Root dependencies
+        run: |
+          yarn -v
+          yarn --ignore-engines --ignore-workspaces
+
+      - name: Transform packages
+        run: |
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          export COMMIT_HASH=$COMMIT_HASH
+          export GENERATE_SUMMARY=true
+          node scripts/transform-packages.js
+        env:
+          PUBLISH_PACKAGES: ${{ env.PUBLISH_PACKAGES }}
+
+      - name: Install dependencies
+        run: |
+          yarn -v
+          yarn --ignore-engines
+
+      - name: Build packages
+        run: yarn build:react-all
+
+      - name: Test packages
+        run: yarn test:react-all:prod
+
+      - name: Temporarily modify .gitignore for publish artifacts
+        run: |
+          echo "📝 Backing up original .gitignore"
+          cp .gitignore .gitignore.backup
+          
+          echo "🔧 Removing lib/, esm/, dist/ from .gitignore to include build artifacts"
+          # 删除 lib/, esm/, dist/ 行，但保留其他内容
+          grep -v -E '^(lib/|esm/|dist/)$' .gitignore > .gitignore.tmp
+          mv .gitignore.tmp .gitignore
+          
+          echo "✅ Modified .gitignore contents:"
+          cat .gitignore
+
+      - name: Publish packages
+        run: |
+          echo "PUBLISH_PACKAGES: $PUBLISH_PACKAGES"
+          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+          IFS=',' read -ra PACKAGES <<< "$PUBLISH_PACKAGES"
+          for package in "${PACKAGES[@]}"; do
+            package_dir="packages/$(echo "$package" | sed 's/@formily\///')"
+            if [ -d "$package_dir" ]; then
+              echo "📦 Publishing package in $package_dir"
+              cd "$package_dir"
+              npm publish --access public
+              cd - > /dev/null
+            fi
+          done
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PUBLISH_PACKAGES: ${{ env.PUBLISH_PACKAGES }}
+
+      - name: Generate summary
+        run: |
+          if [ -f transform-summary.md ]; then
+            cat transform-summary.md >> $GITHUB_STEP_SUMMARY
+          fi

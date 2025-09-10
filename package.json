@@ -10,9 +10,12 @@
   ],
   "scripts": {
     "build": "rimraf -rf packages/*/{lib,dist,esm} && lerna run build",
+    "build:react-all": "rimraf -rf packages/*/{lib,dist,esm} && lerna run build --scope \"@formily/react\" --scope \"@formily-patch/react\" --include-dependencies",
     "build:docs": "dumi build",
     "start": "dumi dev",
     "test": "jest --coverage",
+    "test:react-all": "jest packages/core/ packages/path/ packages/shared/ packages/validator/ packages/reactive/ packages/react/",
+    "test:react-all:prod": "npm run test:react-all -- --silent --coverage",
     "test:reactive": "jest packages/reactive/",
     "test:validator": "jest packages/validator/",
     "test:core": "jest packages/core/",
