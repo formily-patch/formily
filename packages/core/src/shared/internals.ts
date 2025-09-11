@@ -152,7 +152,7 @@ export const patchFieldStates = (
   target: Record<string, GeneralField>,
   patches: INodePatch<GeneralField>[]
 ) => {
-  patches.forEach(({ type, address, oldAddress, payload }) => {
+  patches.forEach(({ type, address, oldAddress, payload, oldPayload }) => {
     if (type === 'remove') {
       if (payload) {
         // When a payload is passed, the node should be deleted. However, the address may still be used.
@@ -173,7 +173,12 @@ export const patchFieldStates = (
         }
       }
       if (address && payload) {
-        locateNode(payload, address)
+        if (oldPayload) {
+          payload.address = oldPayload.address
+          payload.path = oldPayload.path
+        } else {
+          locateNode(payload, address)
+        }
       }
     }
   })
@@ -440,6 +445,12 @@ export const spliceArrayState = (
             address: newIdentifier,
             oldAddress: identifier,
             payload: field,
+            oldPayload: fields[newIdentifier]
+              ? {
+                  address: fields[newIdentifier].address,
+                  path: fields[newIdentifier].path,
+                }
+              : undefined,
           })
           if (isNeedCleanupNode(identifier)) {
             fieldPatches.push({

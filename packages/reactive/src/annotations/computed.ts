@@ -1,4 +1,9 @@
-import { ObModelSymbol, ReactionStack } from '../environment'
+import {
+  ObModelSymbol,
+  PendingComputedReactions,
+  PendingScopeComputedReactions,
+  ReactionStack,
+} from '../environment'
 import { createAnnotation } from '../internals'
 import { buildDataTree } from '../tree'
 import { isFn } from '../checkers'
@@ -13,6 +18,7 @@ import {
   releaseBindingReactions,
   getReactionsFromTargetKey,
 } from '../reaction'
+import { Reaction } from '../types'
 
 interface IValue<T = any> {
   value?: T
@@ -68,6 +74,13 @@ function getPrototypeDescriptor(
   return {}
 }
 
+const isAllComputedDeps = (reaction: Reaction) => {
+  if (!reaction._isComputed) return false
+  const deps = getReactionsFromTargetKey(reaction._context, reaction._property)
+  if (!deps.length) return true
+  return deps.every((dep) => isAllComputedDeps(dep))
+}
+
 export const computed: IComputed = createAnnotation(
   ({ target, key, value }) => {
     const store: IValue = {}
@@ -95,9 +108,6 @@ export const computed: IComputed = createAnnotation(
 
     reaction._name = 'ComputedReaction'
     reaction._scheduler = () => {
-      if (!reaction._dirty_scheduler) return
-      reaction._dirty_scheduler = false
-
       if (!reaction._dirty) {
         runReactionsFromTargetKey({
           target: context,
@@ -112,7 +122,7 @@ export const computed: IComputed = createAnnotation(
 
       if (!deps.length) return
 
-      if (deps.every((dep) => dep._isComputed)) {
+      if (deps.every((dep) => isAllComputedDeps(dep))) {
         // all deps are computed reactions, so should dirty the upstream computed reactions
         runReactionsFromTargetKey({
           target: context,
@@ -140,8 +150,6 @@ export const computed: IComputed = createAnnotation(
     reaction._isComputed = true
     // is need to re calculate
     reaction._dirty = true
-    // is need to schedule to notice upstream reactions
-    reaction._dirty_scheduler = true
     reaction._context = context
     reaction._property = property
 
@@ -157,9 +165,10 @@ export const computed: IComputed = createAnnotation(
           reaction()
           reaction._dirty = false
           const newValue = store.value
-          if (newValue === currentValue) {
-            // no need to schedule
-            reaction._dirty_scheduler = false
+          if (newValue !== currentValue) {
+            // if the value is changed, it should be scheduled
+            PendingComputedReactions.update(reaction)
+            PendingScopeComputedReactions.update(reaction)
           }
         }
         bindTargetKeyWithCurrentReaction({
